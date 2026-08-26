@@ -14,6 +14,11 @@
 	};
 };
 
+&pmi632_charger {
+	dpdm-supply = <&usb_otg>;
+	qcom,hvdcp-disable;
+};
+
 &pmi632_gpios {
 	smb_en {
 		smb_en_default: smb_en_default {
