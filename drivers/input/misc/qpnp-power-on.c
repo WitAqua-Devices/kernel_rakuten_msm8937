@@ -401,6 +401,46 @@ bool qpnp_pon_check_hard_reset_stored(void)
 }
 EXPORT_SYMBOL(qpnp_pon_check_hard_reset_stored);
 
+/**
+ * qpnp_pon_key_is_pressed() - read the live state of a PON key
+ * @pon_type: PON_POWER_ON_TYPE_KPDPWR or PON_POWER_ON_TYPE_RESIN
+ *
+ * Reads PON_RT_STS of the system-reset PMIC directly, so it also reports a
+ * key that was already held before the driver probed (the input device only
+ * reports edges).
+ *
+ * Returns 1 if the key is pressed, 0 if it is not, -ENODEV before probe,
+ * -EINVAL for an unsupported key, or the regmap error.
+ */
+int qpnp_pon_key_is_pressed(int pon_type)
+{
+	struct qpnp_pon *pon = sys_reset_dev;
+	unsigned int pon_rt_sts;
+	u8 mask;
+	int rc;
+
+	if (!pon)
+		return -ENODEV;
+
+	switch (pon_type) {
+	case PON_POWER_ON_TYPE_KPDPWR:
+		mask = QPNP_PON_KPDPWR_N_SET;
+		break;
+	case PON_POWER_ON_TYPE_RESIN:
+		mask = QPNP_PON_RESIN_N_SET;
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	rc = qpnp_pon_read(pon, QPNP_PON_RT_STS(pon), &pon_rt_sts);
+	if (rc)
+		return rc;
+
+	return !!(pon_rt_sts & mask);
+}
+EXPORT_SYMBOL(qpnp_pon_key_is_pressed);
+
 static int qpnp_pon_set_dbc(struct qpnp_pon *pon, u32 delay)
 {
 	int rc = 0;
