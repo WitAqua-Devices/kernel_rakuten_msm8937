@@ -9,6 +9,7 @@ config MACH_TINNO_C330AE
 if MACH_TINNO_C330AE
 
 source "techpack/tinno-c330ae/cxd224x/Kconfig"
+source "techpack/tinno-c330ae/fastboot_key/Kconfig"
 source "techpack/tinno-c330ae/foursemi/Kconfig"
 source "techpack/tinno-c330ae/ft8006p/Kconfig"
 source "techpack/tinno-c330ae/hall_sensor/Kconfig"

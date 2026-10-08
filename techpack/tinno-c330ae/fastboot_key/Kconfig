@@ -1,0 +1,10 @@
+config C330AE_FASTBOOT_KEY
+	bool "Reboot into bootloader on FFBM boot or held volume-down"
+	depends on INPUT_QPNP_POWER_ON && POWER_RESET_QCOM
+	help
+	  The Rakuten Mini (Tinno C330AE) bootloader boots FFBM (FastMMI)
+	  when volume-down is held at power-on, and it cannot be changed.
+	  Say Y to make the kernel turn that boot, or any boot where
+	  volume-down is still held when the kernel reaches late init,
+	  into a reboot to the bootloader (fastboot). This gives a key
+	  path into fastboot that depends only on boot.img.
